@@ -1,0 +1,9 @@
+Frame Rate Independence
+
+	Accuracy
+		gravity wells are too strong: it runs too often when framerate > 60 Hz
+
+	Testing
+		make a key to switch from vsync to fixed 60 Hz frame rate for testng
+
+EOF

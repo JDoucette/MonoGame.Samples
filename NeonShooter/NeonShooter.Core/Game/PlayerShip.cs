@@ -23,8 +23,10 @@ namespace NeonShooter
 			}
 		}
 
-		const int cooldownFrames = 6;
-		int cooldowmRemaining = 0;
+		// ---- JASON ---- START ----
+		const double cooldownFrames = 6;
+		double cooldownRemaining = 0;
+		// ---- JASON ---- END ----
 
 		int framesUntilRespawn = 0;
 		public bool IsDead { get { return framesUntilRespawn > 0; } }
@@ -42,7 +44,12 @@ namespace NeonShooter
 		{
 			if (IsDead)
 			{
-				if (--framesUntilRespawn == 0)
+				// ---- JASON ---- START ----
+				if (NeonShooterGame.TickThisFrame)
+					framesUntilRespawn--;
+				// ---- JASON ---- END ----
+
+				if (framesUntilRespawn == 0)
 				{
 					if (PlayerStatus.Lives == 0)
 					{
@@ -56,9 +63,9 @@ namespace NeonShooter
 			}
 			
 			var aim = Input.GetAimDirection();
-			if (aim.LengthSquared() > 0 && cooldowmRemaining <= 0)
+			if (aim.LengthSquared() > 0 && cooldownRemaining <= 0)
 			{
-				cooldowmRemaining = cooldownFrames;
+				cooldownRemaining = cooldownFrames;
 				float aimAngle = aim.ToAngle();
 				Quaternion aimQuat = Quaternion.CreateFromYawPitchRoll(0, 0, aimAngle);
 
@@ -74,12 +81,22 @@ namespace NeonShooter
 				Sound.Shot.Play(0.2f, rand.NextFloat(-0.2f, 0.2f), 0);
 			}
 
-			if (cooldowmRemaining > 0)
-				cooldowmRemaining--;
+			// ---- JASON ---- START ----
+			if (cooldownRemaining > 0)
+			{
+				//cooldownRemaining--;
+				cooldownRemaining -= NeonShooterGame.NumFrames;
+			}
+			// ---- JASON ---- END ----
 
 			const float speed = 8;
 			Velocity += speed * Input.GetMovementDirection();
-			Position += Velocity;
+
+			// ---- JASON ---- START ----
+			//Position += Velocity;
+			Position += Velocity * (float)(NeonShooterGame.NumFrames);
+			// ---- JASON ---- END ----
+
 			Position = Vector2.Clamp(Position, Size / 2, NeonShooterGame.ScreenSize - Size / 2);
 			
 			if (Velocity.LengthSquared() > 0)
@@ -91,6 +108,11 @@ namespace NeonShooter
 
 		private void MakeExhaustFire()
 		{
+			// ---- JASON ---- START ----
+			if (NeonShooterGame.TickThisFrame == false)
+				return;
+			// ---- JASON ---- END ----
+
 			if (Velocity.LengthSquared() > 0.1f)
 			{
 				// set up some variables

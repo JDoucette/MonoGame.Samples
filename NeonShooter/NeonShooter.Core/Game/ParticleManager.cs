@@ -42,7 +42,10 @@ namespace NeonShooter
 
 				updateParticle(particle);
 
-				particle.PercentLife -= 1f / particle.Duration;
+				// ---- JASON ---- START ----
+				//particle.PercentLife -= 1f / particle.Duration;
+				particle.PercentLife -= (float)NeonShooterGame.NumFrames / particle.Duration;
+				// ---- JASON ---- END ----
 
 				// sift deleted particles to the end of the list
 				Swap(particleList, i - removalCount, i);

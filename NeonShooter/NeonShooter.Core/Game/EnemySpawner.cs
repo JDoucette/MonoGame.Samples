@@ -16,6 +16,11 @@ namespace NeonShooter
 
 		public static void Update()
 		{
+			// ---- JASON ---- START ----
+			if (NeonShooterGame.TickThisFrame == false)
+				return;
+			// ---- JASON ---- END ----
+
 			if (!PlayerShip.Instance.IsDead && EntityManager.Count < 200)
 			{
 				if (rand.Next((int)inverseSpawnChance) == 0)

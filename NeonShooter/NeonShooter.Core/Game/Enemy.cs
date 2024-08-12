@@ -47,18 +47,31 @@ namespace NeonShooter
 
 		public override void Update()
 		{
-			if (timeUntilStart <= 0)
-				ApplyBehaviours();
-			else
+			// ---- JASON ---- START ----
+			bool runFrameUpdate = NeonShooterGame.TickThisFrame;
+			if (runFrameUpdate)
+			// ---- JASON ---- END ----
 			{
-				timeUntilStart--;
-				color = Color.White * (1 - timeUntilStart / 60f);
+				if (timeUntilStart <= 0)
+					ApplyBehaviours();
+				else
+				{
+					timeUntilStart--;
+					color = Color.White * (1 - timeUntilStart / 60f);
+				}
 			}
 
-			Position += Velocity;
+			// ---- JASON ---- START ----
+			//Position += Velocity;
+			Position += Velocity * (float)NeonShooterGame.NumFrames;
+			// ---- JASON ---- END ----
+
 			Position = Vector2.Clamp(Position, Size / 2, NeonShooterGame.ScreenSize - Size / 2);
 
-			Velocity *= 0.8f;
+			// ---- JASON ---- START ----
+			//Velocity *= 0.8f;
+			Velocity *= (float)Math.Pow(0.8, NeonShooterGame.NumFrames);
+			// ---- JASON ---- END ----
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)

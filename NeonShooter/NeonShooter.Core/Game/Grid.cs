@@ -40,12 +40,22 @@ namespace NeonShooter
 			public void Update()
 			{
 				Velocity += acceleration;
-				Position += Velocity;
+
+				// ---- JASON ---- START ----
+				//Position += Velocity;
+				Position += Velocity * (float)(NeonShooterGame.NumFrames);
+				// ---- JASON ---- END ----
+
 				acceleration = Vector3.Zero;
 				if (Velocity.LengthSquared() < 0.001f * 0.001f)
 					Velocity = Vector3.Zero;
 
-				Velocity *= damping;
+				// ---- JASON ---- START ----
+				double numFrames = NeonShooterGame.NumFrames;
+				//Velocity *= damping;
+				Velocity *= (float)Math.Pow(damping, numFrames);
+				// ---- JASON ---- END ----
+
 				damping = 0.98f;
 			}
 		}

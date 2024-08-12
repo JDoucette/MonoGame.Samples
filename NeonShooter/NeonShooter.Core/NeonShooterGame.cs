@@ -20,6 +20,15 @@ namespace NeonShooter
 		public static Viewport Viewport { get { return Instance.GraphicsDevice.Viewport; } }
 		public static Vector2 ScreenSize { get { return new Vector2(Viewport.Width, Viewport.Height); } }
 		public static GameTime GameTime { get; private set; }
+
+		// ---- JASON ---- START ----
+		// number of 1/60 frames that passed
+		public static double NumFrames { get { return GameTime.ElapsedGameTime.TotalSeconds / (1.0 / 60.0);  } }  
+        // if this frame represents that 1/60th of a second tick
+        public static bool TickThisFrame { get { return tickThisFrame; } }
+		public static int FrameRate { get { return frameRate; } }
+		// ---- JASON ---- END ----
+
 		public static ParticleManager<ParticleState> ParticleManager { get; private set; }
 		public static Grid Grid { get; private set; }
 
@@ -29,16 +38,33 @@ namespace NeonShooter
 
 		bool paused = false;
 
-        
-        public NeonShooterGame()
+		// ---- JASON ---- START ----
+		private static double frameAccumulation = 0.0;
+		private static bool tickThisFrame = false;
+        private static int frameRate = 0;
+        private static int frameCountThisSecond = 0;
+        private static double frameStartSecond = 0.0;
+		// ---- JASON ---- END ----
+
+		public NeonShooterGame()
         {
 			Instance = this;
 			graphics = new GraphicsDeviceManager(this);
 
-            graphics.PreferredBackBufferWidth = 1920;
-            graphics.PreferredBackBufferHeight = 1080;
+			// ---- JASON ---- START ----
+			// screen size
+			//graphics.PreferredBackBufferWidth = 1920;
+			//graphics.PreferredBackBufferHeight = 1080;
+			graphics.PreferredBackBufferWidth = 1920 - 128;
+			graphics.PreferredBackBufferHeight = 1080 - 128;
+            //graphics.IsFullScreen = false;
+            // frame rate
+            graphics.SynchronizeWithVerticalRetrace = true;  // smoothest animation
+			//graphics.SynchronizeWithVerticalRetrace = false;  // full frame-rate
+			this.IsFixedTimeStep = false;
+			// ---- JASON ---- END ----
 
-            bloom = new BloomComponent(this);
+			bloom = new BloomComponent(this);
 			Components.Add(bloom);
 			bloom.Settings = new BloomSettings(null, 0.25f, 4, 2, 1, 1.5f, 1);
             bloom.Visible = false;
@@ -92,7 +118,25 @@ namespace NeonShooter
         protected override void Update(GameTime gameTime)
         {
             GameTime = gameTime;
-            Input.Update();
+
+            // ---- JASON ---- START ----
+            // tick = 1/60th of a second
+            frameAccumulation += gameTime.ElapsedGameTime.TotalSeconds;
+			tickThisFrame = frameAccumulation >= 1.0 / 60.0;
+            if (tickThisFrame)
+                frameAccumulation -= 1.0 / 60.0;
+            // frame rate calculator
+            if (gameTime.TotalGameTime.TotalSeconds > frameStartSecond + 1.0)
+            {
+                frameRate = frameCountThisSecond;
+                frameCountThisSecond = 0;  // reset for next second
+				frameStartSecond = gameTime.TotalGameTime.TotalSeconds;
+			}
+            else
+				frameCountThisSecond++;  // only count frames full within the second.
+			// ---- JASON ---- END ----
+
+			Input.Update();
 
 #if !__IOS__
             // Allows the game to exit
@@ -141,7 +185,12 @@ namespace NeonShooter
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
 
             DrawTitleSafeAlignedString("Lives: " + PlayerStatus.Lives, 5);
-            DrawTitleSafeRightAlignedString("Score: " + PlayerStatus.Score, 5);
+
+            // ---- JASON ---- START ----
+            DrawTitleSafeAlignedString("Frame Rate: " + NeonShooterGame.FrameRate + " Hz", 35);
+			// ---- JASON ---- END ----
+
+			DrawTitleSafeRightAlignedString("Score: " + PlayerStatus.Score, 5);
             DrawTitleSafeRightAlignedString("Multiplier: " + PlayerStatus.Multiplier, 35);
             // draw the custom mouse cursor
             spriteBatch.Draw(Art.Pointer, Input.MousePosition, Color.White);
@@ -167,10 +216,13 @@ namespace NeonShooter
 
         private void DrawTitleSafeAlignedString(string text, int pos)
         {
-            spriteBatch.DrawString(Art.Font, text, new Vector2(Viewport.TitleSafeArea.X + pos), Color.White);
-        }
+            // ---- JASON ---- START ----
+			spriteBatch.DrawString(Art.Font, text, new Vector2(5, Viewport.TitleSafeArea.X + pos), Color.White);
+			//spriteBatch.DrawString(Art.Font, text, new Vector2(Viewport.TitleSafeArea.X + pos), Color.White);
+			// ---- JASON ---- END ----
+		}
 
-        private void DrawTitleSafeRightAlignedString(string text, float y)
+		private void DrawTitleSafeRightAlignedString(string text, float y)
         {
             var textWidth = Art.Font.MeasureString(text).X;
             spriteBatch.DrawString(Art.Font, text, new Vector2(ScreenSize.X - textWidth - 5 - Viewport.TitleSafeArea.X, Viewport.TitleSafeArea.Y + y), Color.White);

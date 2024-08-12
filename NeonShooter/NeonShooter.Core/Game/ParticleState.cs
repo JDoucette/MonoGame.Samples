@@ -40,10 +40,13 @@ namespace NeonShooter
 			var vel = particle.State.Velocity;
 			float speed = vel.Length();
 
+			// ---- JASON ---- START ----
 			// using Vector2.Add() should be slightly faster than doing "x.Position += vel;" because the Vector2s
 			// are passed by reference and don't need to be copied. Since we may have to update a very large 
 			// number of particles, this method is a good candidate for optimizations.
-			Vector2.Add(ref particle.Position, ref vel, out particle.Position);
+			//Vector2.Add(ref particle.Position, ref vel, out particle.Position);
+			particle.Position += vel * (float)NeonShooterGame.NumFrames;
+			// ---- JASON ---- END ----
 
 			// fade the particle if its PercentLife or speed is low.
 			float alpha = Math.Min(1, Math.Min(particle.PercentLife * 2, speed * 1f));
@@ -80,20 +83,39 @@ namespace NeonShooter
 					var dPos = blackHole.Position - pos;
 					float distance = dPos.Length();
 					var n = dPos / distance;
-					vel += 10000 * n / (distance * distance + 10000);
+					// ---- JASON ---- START ----
+					//vel += 10000 * n / (distance * distance + 10000);
+					vel += (float)NeonShooterGame.NumFrames * 10000 * n / (distance * distance + 10000);
+					// ---- JASON ---- END ----
 
 					// add tangential acceleration for nearby particles
 					if (distance < 400)
-						vel += 45 * new Vector2(n.Y, -n.X) / (distance + 100);
+					{
+						// ---- JASON ---- START ----
+						//vel += 45 * new Vector2(n.Y, -n.X) / (distance + 100);
+						vel += (float)NeonShooterGame.NumFrames * 45 * new Vector2(n.Y, -n.X) / (distance + 100);
+						// ---- JASON ---- END ----
+					}
 				}
 			}
 
-			if (Math.Abs(vel.X) + Math.Abs(vel.Y) < 0.00000000001f)	// denormalized floats cause significant performance issues
+			if (Math.Abs(vel.X) + Math.Abs(vel.Y) < 0.00000000001f) // denormalized floats cause significant performance issues
 				vel = Vector2.Zero;
 			else if (particle.State.Type == ParticleType.Enemy)
-				vel *= 0.94f;
+			{
+				// ---- JASON ---- START ----
+				//vel *= 0.94f;
+				vel *= (float)Math.Pow(0.94, NeonShooterGame.NumFrames);
+				// ---- JASON ---- END ----
+			}
 			else
-				vel *= 0.96f + Math.Abs(pos.X) % 0.04f;	// rand.Next() isn't thread-safe, so use the position for pseudo-randomness
+			{
+				// ---- JASON ---- START ----
+				// rand.Next() isn't thread-safe, so use the position for pseudo-randomness
+				//vel *= 0.96f + Math.Abs(pos.X) % 0.04f;
+				vel *= (float)Math.Pow(0.96f + Math.Abs(pos.X) % 0.04f, NeonShooterGame.NumFrames);
+				// ---- JASON ---- END ----
+			}
 
 			particle.State.Velocity = vel;
 		}

@@ -30,7 +30,11 @@ namespace NeonShooter
 			if (Velocity.LengthSquared() > 0)
 				Orientation = Velocity.ToAngle();
 
-			Position += Velocity;
+			// ---- JASON ---- START ----
+			//Position += Velocity;
+			Position += Velocity * (float)NeonShooterGame.NumFrames;
+			// ---- JASON ---- END ----
+
 			NeonShooterGame.Grid.ApplyExplosiveForce(0.5f * Velocity.Length(), Position, 80);
 
 			// delete bullets that go off-screen

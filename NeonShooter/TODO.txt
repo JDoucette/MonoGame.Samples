@@ -1,0 +1,9 @@
+Frame Rate Independence
+
+	nothing currently known action items; should check all frame counts, however.
+
+HUD
+
+	show frame rate.
+
+EOF
