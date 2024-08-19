@@ -8,7 +8,7 @@ using System;
 
 namespace NeonShooter
 {
-    static class ColorUtil
+	static class ColorUtil
 	{
 		public static Vector3 ColorToHSV(Color color)
 		{

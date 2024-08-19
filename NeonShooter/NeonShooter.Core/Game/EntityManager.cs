@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace NeonShooter
 {
-    static class EntityManager
+	static class EntityManager
 	{
 		static List<Entity> entities = new List<Entity>();
 		static List<Enemy> enemies = new List<Enemy>();

@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace NeonShooter
 {
-    static class Sound
+	static class Sound
 	{
 		public static Song Music { get; private set; }
 

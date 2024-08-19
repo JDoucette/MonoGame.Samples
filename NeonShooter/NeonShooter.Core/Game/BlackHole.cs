@@ -9,7 +9,7 @@ using System;
 
 namespace NeonShooter
 {
-    class BlackHole : Entity
+	class BlackHole : Entity
 	{
 		private static Random rand = new Random();
 

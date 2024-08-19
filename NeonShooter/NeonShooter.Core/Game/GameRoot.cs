@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace NeonShooter
 {
-    public class GameRoot : Microsoft.Xna.Framework.Game
+	public class GameRoot : Microsoft.Xna.Framework.Game
 	{
 		// some helpful static properties
 		public static GameRoot Instance { get; private set; }

@@ -8,7 +8,7 @@ using System;
 
 namespace NeonShooter
 {
-    static class EnemySpawner
+	static class EnemySpawner
 	{
 		static Random rand = new Random();
 		static float inverseSpawnChance = 90;

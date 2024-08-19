@@ -9,7 +9,7 @@ using System;
 
 namespace NeonShooter
 {
-    static class Extensions
+	static class Extensions
 	{
 		public static void DrawLine(this SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color, float thickness = 2f)
 		{

@@ -9,7 +9,7 @@ using System;
 
 namespace NeonShooter
 {
-    class PlayerShip : Entity
+	class PlayerShip : Entity
 	{
 		private static PlayerShip instance;
 		public static PlayerShip Instance 

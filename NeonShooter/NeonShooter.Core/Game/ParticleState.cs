@@ -8,7 +8,7 @@ using System;
 
 namespace NeonShooter
 {
-    public enum ParticleType { None, Enemy, Bullet, IgnoreGravity }
+	public enum ParticleType { None, Enemy, Bullet, IgnoreGravity }
 
 	public struct ParticleState
 	{

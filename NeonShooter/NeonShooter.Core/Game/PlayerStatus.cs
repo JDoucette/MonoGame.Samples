@@ -7,7 +7,7 @@ using System.IO;
 
 namespace NeonShooter
 {
-    static class PlayerStatus
+	static class PlayerStatus
 	{
 		// amount of time it takes, in seconds, for a multiplier to expire.
 		private const float multiplierExpiryTime = 0.8f;

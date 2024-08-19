@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace NeonShooter
 {
-    static class Input
+	static class Input
 	{
 		private static KeyboardState keyboardState, lastKeyboardState;
 		private static MouseState mouseState, lastMouseState;

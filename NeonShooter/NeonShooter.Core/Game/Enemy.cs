@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace NeonShooter
 {
-    class Enemy : Entity
+	class Enemy : Entity
 	{
 		public static Random rand = new Random();
 

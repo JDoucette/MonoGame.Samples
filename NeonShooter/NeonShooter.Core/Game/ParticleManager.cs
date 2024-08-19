@@ -9,7 +9,7 @@ using System;
 
 namespace NeonShooter
 {
-    public class ParticleManager<T>
+	public class ParticleManager<T>
 	{
 		// This delegate will be called for each particle.
 		private Action<Particle> updateParticle;

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace NeonShooter
 {
-    public class Grid
+	public class Grid
 	{
 		class PointMass
 		{
