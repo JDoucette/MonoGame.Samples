@@ -39,6 +39,7 @@ namespace NeonShooter
 		bool paused = false;
 
 		// ---- JASON ---- START ----
+		private bool limitFrameRate60Hz = false;
 		private static double frameAccumulation = 0.0;
 		private static bool tickThisFrame = false;
 		private static int frameRate = 0;
@@ -62,6 +63,7 @@ namespace NeonShooter
 			graphics.SynchronizeWithVerticalRetrace = true;  // smoothest animation
 			//graphics.SynchronizeWithVerticalRetrace = false;  // full frame-rate
 			this.IsFixedTimeStep = false;
+			this.TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 60.0);
 			// ---- JASON ---- END ----
 
 			bloom = new BloomComponent(this);
@@ -149,6 +151,14 @@ namespace NeonShooter
 			if (Input.WasKeyPressed(Keys.B))
 				bloom.Visible = !bloom.Visible;
 
+			// ---- JASON ---- START ----
+			if (Input.WasKeyPressed(Keys.F))
+			{
+				limitFrameRate60Hz = !limitFrameRate60Hz;
+				NeonShooterGame.Instance.SetFrameRate(limitFrameRate60Hz);
+			}
+			// ---- JASON ---- END ----
+
 			if (!paused)
 			{
 				PlayerStatus.Update();
@@ -227,5 +237,17 @@ namespace NeonShooter
 			var textWidth = Art.Font.MeasureString(text).X;
 			spriteBatch.DrawString(Art.Font, text, new Vector2(ScreenSize.X - textWidth - 5 - Viewport.TitleSafeArea.X, Viewport.TitleSafeArea.Y + y), Color.White);
 		}
+
+		// ---- JASON ---- START ----
+		internal void SetFrameRate(bool limitFrameRate60Hz)
+		{
+			// frame rate
+			this.IsFixedTimeStep = limitFrameRate60Hz;
+			this.TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 60.0);  // only used if IsFixedTimeStep == true
+			graphics.SynchronizeWithVerticalRetrace = (limitFrameRate60Hz == false);
+			graphics.ApplyChanges();
+		}
+		// ---- JASON ---- END ----
+
 	}
 }
